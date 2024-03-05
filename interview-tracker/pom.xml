@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>net.bhart</groupId>
 	<artifactId>interview-tracker</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 	<name>interview-tracker</name>
 	<description>Bryan&apos;s demo project for Spring Boot</description>
 	<properties>

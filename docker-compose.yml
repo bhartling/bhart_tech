@@ -1,4 +1,11 @@
-version: "3.8"
+version: "3.6"
+
+x-env-postgres: &env-postgres
+  POSTGRES_DB: "interview"
+  POSTGRES_USER: "pguser"
+  POSTGRES_PASSWORD: "pass123"
+  POSTGRES_URL: "jdbc:postgresql://pgdb:5432/interview"
+
 services:
 
   pgdb:
@@ -8,9 +15,7 @@ services:
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_DB: interview
-      POSTGRES_USER: pguser
-      POSTGRES_PASSWORD: pass123
+      <<: *env-postgres
     volumes:
       - local_pgdata:/var/lib/postgresql/data
 
@@ -19,8 +24,9 @@ services:
     container_name: liquibase
     volumes:
       - ./liquibase/changelogs:/liquibase/changelogs
-#      - ./liquibase/migrations:/liquibase/migrations
-    command: #["--changeLogFile=/liquibase/changelog.xml", "--defaultsFile=/liquibase/liquibase.properties", "update"]
+    environment:
+      <<: *env-postgres
+    command:
       - "--url=jdbc:postgresql://pgdb:5432/interview"
       - "--changeLogFile=/changelogs/changelog.xml"
       - "--defaultsFile=/liquibase.properties"
@@ -55,6 +61,32 @@ services:
         condition: service_started
       liquibase:
         condition: service_completed_successfully
+
+  maven-builder:
+    image: maven:3.9.6-amazoncorretto-17
+    volumes:
+      - ./interview-tracker:/usr/src/app
+    working_dir: /usr/src/app
+    command: mvn clean install -U -DskipTests
+
+
+  interviewapp:
+    image: interview-app:latest
+    build:
+      context: ./interview-tracker
+      dockerfile: Dockerfile.app
+    environment:
+      <<: *env-postgres
+    ports:
+      - "8080:8080"
+    depends_on:
+      pgdb:
+        condition: service_started
+      liquibase:
+        condition: service_completed_successfully
+      maven-builder:
+        condition: service_completed_successfully
+
 
 volumes:
   local_pgdata:
