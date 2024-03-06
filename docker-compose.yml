@@ -67,7 +67,7 @@ services:
     volumes:
       - ./interview-tracker:/usr/src/app
     working_dir: /usr/src/app
-    command: mvn clean install -U -DskipTests
+    command: mvn clean install
 
 
   interviewapp:

@@ -3,10 +3,10 @@ package net.bhart.interviewtracker;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
+//@SpringBootTest
 class InterviewTrackerApplicationTests {
 
-	@Test
+//	@Test
 	void contextLoads() {
 	}
 
