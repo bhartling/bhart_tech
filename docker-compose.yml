@@ -90,14 +90,13 @@ services:
         condition: service_completed_successfully
 
   frontend:
+    image: frontend:latest
     container_name: frontend
     build:
       context: ./frontend
-      dockerfile: Dockerfile.web
+      dockerfile: Dockerfile.web2
     ports:
       - "3000:3000"
-    volumes:
-      - ./frontend/bhart-web:/app
     depends_on:
       interviewapp:
         condition: service_started

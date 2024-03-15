@@ -1,0 +1,23 @@
+# Use an official Node.js image as the base image
+FROM node:21.6.2
+
+# Install Yarn
+# RUN npm install -g yarn
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Copy package.json and package-lock.json to the container
+COPY bhart-web/package.json bhart-web/yarn.lock ./
+
+# Install dependencies
+RUN yarn install
+
+# Copy the entire project to the container
+COPY bhart-web .
+
+# Expose the port that Vite will run on
+EXPOSE 3000
+
+# Start the Vite development server
+CMD ["npx", "yarn", "dev"]
