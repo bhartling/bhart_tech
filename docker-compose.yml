@@ -94,7 +94,7 @@ services:
     container_name: frontend
     build:
       context: ./frontend
-      dockerfile: Dockerfile.web2
+      dockerfile: frontend/Dockerfile.web
     ports:
       - "3000:3000"
     depends_on:
