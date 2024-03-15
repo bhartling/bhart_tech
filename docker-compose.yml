@@ -64,6 +64,7 @@ services:
 
   maven-builder:
     image: maven:3.9.6-amazoncorretto-17
+    container_name: maven-builder
     volumes:
       - ./interview-tracker:/usr/src/app
     working_dir: /usr/src/app
@@ -72,6 +73,7 @@ services:
 
   interviewapp:
     image: interview-app:latest
+    container_name: interviewapp
     build:
       context: ./interview-tracker
       dockerfile: Dockerfile.app
@@ -86,6 +88,18 @@ services:
         condition: service_completed_successfully
       maven-builder:
         condition: service_completed_successfully
+
+  frontend:
+    image: frontend:latest
+    container_name: frontend
+    build:
+      context: ./frontend
+      dockerfile: frontend/Dockerfile.web
+    ports:
+      - "3000:3000"
+    depends_on:
+      interviewapp:
+        condition: service_started
 
 
 volumes:
